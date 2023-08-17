@@ -1,6 +1,16 @@
 import React from 'react';
 import './Calculator.css'
 import Button from './Button'
+import { create, all } from 'mathjs'
+
+const config = { }
+const math = create(all, config)
+
+console.log(math.sqrt(-4).toString()) // 2i
+
+
+
+const dupOpRegex = /[+/*]?-?\d+\.?\d*/g;
 
 class Calculator extends React.Component{
 
@@ -44,11 +54,11 @@ class Calculator extends React.Component{
                 buttonValue === "/" :
             if(!this.state.operatorFlag){
                 currentVal += buttonValue
-                operatorFlag = true
                 this.setState({decimalFlag:false})
             }else{
                 const newNumber = currentVal.slice(0, currentVal.length-1)
-                currentVal = newNumber + buttonValue
+                currentVal = newNumber
+                currentVal += buttonValue
             }
             break;
 
@@ -59,8 +69,10 @@ class Calculator extends React.Component{
             break;
 
             case buttonValue === "=":
-                currentVal = eval(currentVal);
+                console.log(currentVal.match(dupOpRegex))
+                currentVal = math.evaluate(currentVal.match(dupOpRegex).join(''));
                 operatorFlag = false;
+                this.setState({decimalFlag:true})
             break;
 
             case buttonValue === ".":
@@ -68,7 +80,7 @@ class Calculator extends React.Component{
                     currentVal += "."
                     this.setState({decimalFlag:true})
                 }
-
+            break;
             default:
                 break;
        }
@@ -88,7 +100,7 @@ class Calculator extends React.Component{
                     <Button className="button" id="seven" value="7" handleClick={this.handleClick}></Button>
                     <Button className="button" id="eight" value="8" handleClick={this.handleClick}></Button>
                     <Button className="button" id="nine" value="9" handleClick={this.handleClick}></Button>
-                    <Button className="button" id="substract" value="-" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="subtract" value="-" handleClick={this.handleClick}></Button>
                     <Button className="button" id="four" value="4" handleClick={this.handleClick}></Button>
                     <Button className="button" id="five" value="5" handleClick={this.handleClick}></Button>
                     <Button className="button" id="six" value="6" handleClick={this.handleClick}></Button>

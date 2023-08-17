@@ -7,7 +7,7 @@ class Button extends React.Component{
     }
     render(){
         return(
-            <button onClick={this.runParentHandleClick}>{this.props.value}</button>
+            <button onClick={this.runParentHandleClick} className="button" id={this.props.id} value={this.props.value}>{this.props.value}</button>
         )
     }
 }
