@@ -1,59 +1,109 @@
 import React from 'react';
 import './Calculator.css'
+import Button from './Button'
 
 class Calculator extends React.Component{
 
     constructor(props){
         super(props);
-
         this.state = {
-            currentVal: 0,
-            formula: ""
+            currentVal: "0",
+            operatorFlag: false,
+            decimalFlag: false
         };
         this.handleClick = this.handleClick.bind(this);
-        this.clearDisplay = this.clearDisplay.bind(this);
     }
 
-    handleClick(event){
-        this.setState(state =>({
-            currentVal: event.target.value,
-            formula: state.formula += this.state.currentVal
-        }));
+    handleClick = (buttonValue) => {
+        let currentVal = this.state.currentVal;
+        let operatorFlag = this.state.operatorFlag;
+
+        switch(true){
+            case buttonValue === "0" ||
+                buttonValue === "1" ||
+                buttonValue === "2" ||
+                buttonValue === "3" ||
+                buttonValue === "4" ||
+                buttonValue === "5" ||
+                buttonValue === "6" ||
+                buttonValue === "7" ||
+                buttonValue === "8" ||
+                buttonValue === "9" :
+
+            if(this.state.currentVal !== "0"){
+                currentVal += buttonValue
+                operatorFlag = false
+            }else{
+                currentVal = buttonValue;
+            }
+            break;
+
+            case buttonValue === "+" ||
+                buttonValue === "-" ||
+                buttonValue === "*" ||
+                buttonValue === "/" :
+            if(!this.state.operatorFlag){
+                currentVal += buttonValue
+                operatorFlag = true
+                this.setState({decimalFlag:false})
+            }else{
+                const newNumber = currentVal.slice(0, currentVal.length-1)
+                currentVal = newNumber + buttonValue
+            }
+            break;
+
+            case buttonValue === "AC":
+                currentVal = "0"
+                operatorFlag = false
+                this.setState({decimalFlag:false})
+            break;
+
+            case buttonValue === "=":
+                currentVal = eval(currentVal);
+                operatorFlag = false;
+            break;
+
+            case buttonValue === ".":
+                if(!this.state.decimalFlag){
+                    currentVal += "."
+                    this.setState({decimalFlag:true})
+                }
+
+            default:
+                break;
+       }
+       this.setState({operatorFlag})
+       this.setState({currentVal})
     }
 
-    clearDisplay(){
-        this.setState({
-            currentVal: 0
-        })
-    }
 
     render(){
         return(
             <div className="calculator">
-                <div className="formula">{this.state.formula}</div>
                 <div id="display">{this.state.currentVal}</div>
                 <div id="controls">
-                    <button id="clear" onClick={this.clearDisplay}>AC</button>
-                    <button id="divide" value="/" onClick={this.handleClick}>/</button>
-                    <button id="multiply" value="*" onClick={this.handleClick}>X</button>
-                    <button id="seven" value="7" onClick={this.handleClick}>7</button>
-                    <button id="eight" value="8" onClick={this.handleClick}>8</button>
-                    <button id="nine" value="9" onClick={this.handleClick}>9</button>
-                    <button id="substract" value="-" onClick={this.handleClick}>-</button>
-                    <button id="four" value="4" onClick={this.handleClick}>4</button>
-                    <button id="five" value="5" onClick={this.handleClick}>5</button>
-                    <button id="six" value="6" onClick={this.handleClick}>6</button>
-                    <button id="add" value="+" onClick={this.handleClick}>+</button>
-                    <button id="one" value="1" onClick={this.handleClick}>1</button>
-                    <button id="two" value="2" onClick={this.handleClick}>2</button>
-                    <button id="three" value ="3" onClick={this.handleClick}>3</button>
-                    <button id="zero" value="0" onClick={this.handleClick}>0</button>
-                    <button id="decimal" value="." onClick={this.handleClick}>.</button>
-                    <button id="equals" value="=">=</button>
+                    <Button className="button" id="clear" value="AC" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="divide" value="/" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="multiply" value="*" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="seven" value="7" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="eight" value="8" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="nine" value="9" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="substract" value="-" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="four" value="4" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="five" value="5" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="six" value="6" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="add" value="+" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="one" value="1" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="two" value="2" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="three" value ="3" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="zero" value="0" handleClick={this.handleClick}></Button>
+                    <Button className="button" id="decimal" value="." handleClick={this.handleClick}></Button>
+                    <Button className="button" id="equals" value="=" handleClick={this.handleClick}></Button>
                 </div>
             </div>
         )
     }
 }
+
 
 export default Calculator;
